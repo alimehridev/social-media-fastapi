@@ -18,4 +18,11 @@ Endpoints:
  5. Default
 	 1. / Root
 ##
-...
+## How to run it ?
+At first you need to install all requirements which are in requirements.txt file by command bellow :
+
+    pip install -r requirements.txt
+This command will install fastapi[all] for your that will include of all the fastapi dependencies like **uvicorn**, so you can run the project by command bellow:
+
+    uvicorn main:app
+Now the application is running on 127.0.0.1 port 8000 . You can use it :)
