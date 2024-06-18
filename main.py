@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.params import Body
+from models import Post
 
 app = FastAPI() 
 
@@ -27,21 +28,15 @@ def get_posts():
     }
 
 @app.post("/createpost")
-def createpost(body: dict = Body(...)):
-    try:
-        id = 1
-        title = body['title']
-        content = body['content']
-        return {
-            "data": {
-                "id": id,
-                "title": title,
-                "content": content
-            },
-            "status": "success"
-        }
-    except:
-        return {
-            "data": {},
-            "status": "failed"
-        }
+def createpost(post: Post):
+    # post.model_dump() will convert a BaseModel instance to a dictionary .
+    return {
+        "data": {
+            "id": 1,
+            "title": post.title,
+            "content": post.content,
+            "published": post.published,
+            "rating": post.rating
+        },
+        "status": "success"
+    }
