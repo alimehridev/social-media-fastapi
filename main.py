@@ -53,3 +53,13 @@ def post(id: int):
         "post_details": post[0],
         "status": "success"
     }
+
+
+@app.delete("/posts/{id}")
+def delete_post(id: int):
+    for i, p in enumerate(posts):
+        if id == p['id']:
+            posts.pop(i)
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
+    
+    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} does not exits to be deleted .")
