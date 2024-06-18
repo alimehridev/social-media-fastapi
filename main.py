@@ -30,7 +30,7 @@ def get_posts():
         "status": "success"
     }
 
-@app.post("/posts")
+@app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
     # post.model_dump() will convert a BaseModel instance to a dictionary .
     dumped_post = post.model_dump()
