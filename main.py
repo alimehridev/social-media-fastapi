@@ -27,8 +27,8 @@ def get_posts():
         "status": "success"
     }
 
-@app.post("/createpost")
-def createpost(post: Post):
+@app.post("/posts")
+def create_post(post: Post):
     # post.model_dump() will convert a BaseModel instance to a dictionary .
     return {
         "data": {
