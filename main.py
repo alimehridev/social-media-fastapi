@@ -40,3 +40,11 @@ def create_post(post: Post):
         "data": dumped_post,
         "status": "success"
     }
+
+@app.get("/posts/{id}")
+def post(id: int):
+    post = [p for p in posts if p['id'] == id]
+    return {
+        "post_details": post[0],
+        "status": "success"
+    }

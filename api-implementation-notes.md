@@ -18,3 +18,4 @@ Here I will write all the notes I learnt in this project .
  5. Deleting an entity like a post should be done through a DELETE HTTP Request . For example, If you want to delete a Post with id=5 you should send a DELETE request to /posts/5 path . To define a DELETE path in FastAPI you can do like below :
 	> app.delete("/posts/{id}")
  6. When you create a new entity of anything, In return you should return new created and saved in database entity to the user . 
+ 7. Validating user inputs is very important and in **FastAPI** we use **pydantic** library to do this . 
