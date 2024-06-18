@@ -63,3 +63,15 @@ def delete_post(id: int):
             return Response(status_code=status.HTTP_204_NO_CONTENT)
     
     return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} does not exits to be deleted .")
+
+
+@app.put("/posts/{id}")
+def update_post(id: int, body: Post):
+    for i, p in enumerate(posts):
+        if id == p['id']:
+            body = body.model_dump()
+            body['id'] = id
+            posts[i] = body
+            return {"status": "success"}
+        
+    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} does not exist .")
