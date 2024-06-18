@@ -26,3 +26,6 @@ This command will install fastapi[all] for your that will include of all the fas
 
     uvicorn main:app
 Now the application is running on 127.0.0.1 port 8000 . You can use it :)
+
+
+> If I learnt anything in this project, I have written it in api-implementation-notes.md file . You can read them if you want .
