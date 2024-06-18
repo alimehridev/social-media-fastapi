@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, status
 from fastapi.params import Body
 from models import Post
 
@@ -46,7 +46,7 @@ def create_post(post: Post):
 def post(id: int, response: Response):
     post = [p for p in posts if p['id'] == id]
     if len(post) == 0:
-        response.status_code = 404
+        response.status_code = status.HTTP_404_NOT_FOUND
         return {
             "post_details": {},
             "status": response.status_code
