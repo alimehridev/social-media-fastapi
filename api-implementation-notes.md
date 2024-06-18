@@ -19,3 +19,7 @@ Here I will write all the notes I learnt in this project .
 	> app.delete("/posts/{id}")
  6. When you create a new entity of anything, In return you should return new created and saved in database entity to the user . 
  7. Validating user inputs is very important and in **FastAPI** we use **pydantic** library to do this . 
+ 8. Ordering is important in routes defining . **FastAPI** will choose the first path which match with user input . Let's have an example . If you have two routes like below:
+	> app.get("/posts/{id}")
+	> app.get("/posts/latest")
+If /posts/{id} is above of /posts/latest, users will never be able to send a request to /posts/latest because /posts/{id} will also match /posts/latest too . In other words, If you send a request to /posts/latest to get the latest post, this path is also match with /posts/{id} so **FastAPI** will choose it because it is defined sooner . To solving this problem you need to define /posts/latest at first then define /posts/{id} after that . 

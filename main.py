@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.params import Body
 from models import Post
 
@@ -41,9 +41,16 @@ def create_post(post: Post):
         "status": "success"
     }
 
+
 @app.get("/posts/{id}")
-def post(id: int):
+def post(id: int, response: Response):
     post = [p for p in posts if p['id'] == id]
+    if len(post) == 0:
+        response.status_code = 404
+        return {
+            "post_details": {},
+            "status": response.status_code
+        }
     return {
         "post_details": post[0],
         "status": "success"
