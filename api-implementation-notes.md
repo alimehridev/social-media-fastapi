@@ -17,4 +17,4 @@ Here I will write all the notes I learnt in this project .
 	- The difference between PUT and PATCH is that, In a PATCH request you just need to send updated fields and not all of them but in a PUT request you should pass all the fields including updated and not updated ones, in other words, PATCH focused on changed fields but PUT does not care about changed and unchanged fields .
  5. Deleting an entity like a post should be done through a DELETE HTTP Request . For example, If you want to delete a Post with id=5 you should send a DELETE request to /posts/5 path . To define a DELETE path in FastAPI you can do like below :
 	> app.delete("/posts/{id}")
- 6. 
+ 6. When you create a new entity of anything, In return you should return new created and saved in database entity to the user . 
