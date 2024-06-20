@@ -1,9 +1,24 @@
 from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.params import Body
 from models import Post
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import time
 
 app = FastAPI() 
 
+while True:
+    try:
+        conn = psycopg2.connect(host = "localhost", database = "social-media", user = "postgres", password = "mysecretpassword", cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
+        print("[+] Connecting to database was successful .")
+        break
+    except Exception as err:
+        print("[-] Connecting to database failed .")
+        print("[-] Error:", err)
+        time.sleep(5)
+
+        
 posts = [
     {
         "id": 1,
