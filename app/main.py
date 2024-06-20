@@ -18,7 +18,7 @@ while True:
         print("[-] Error:", err)
         time.sleep(5)
 
-        
+
 posts = [
     {
         "id": 1,
@@ -40,6 +40,8 @@ async def root():
 
 @app.get("/posts")
 def get_posts():
+    cursor.execute("SELECT * FROM posts")
+    posts = cursor.fetchall()
     return {
         "data": posts,
         "status": "success"
@@ -59,13 +61,14 @@ def create_post(post: Post):
 
 @app.get("/posts/{id}")
 def post(id: int):
-    post = [p for p in posts if p['id'] == id]
-    if len(post) == 0:
+    cursor.execute("SELECT * FROM posts WHERE id=" + str(id))
+    post = cursor.fetchone()
+    if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={
             "status": "failed"
         })
     return {
-        "post_details": post[0],
+        "post_details": post,
         "status": "success"
     }
 
