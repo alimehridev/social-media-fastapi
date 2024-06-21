@@ -1,10 +1,19 @@
-from fastapi import FastAPI, Response, status, HTTPException
+# General imports
+from fastapi import FastAPI, Response, status, HTTPException, Depends
+import time
+# Schemas imports
 from models import Post
+# Database imports
 import psycopg2
 from psycopg2.extras import RealDictCursor
-import time
+from . import models
+from .database import engine, get_db
+from sqlalchemy.orm import Session
 
+
+models.Base.metadata.create_all(bind=engine)
 app = FastAPI() 
+
 
 while True:
     try:
@@ -26,7 +35,7 @@ async def root():
 
 # Get All Posts Function
 @app.get("/posts")
-def get_posts():
+def get_posts(db: Session = Depends(get_db)):
     cursor.execute("SELECT * FROM posts")
     posts = cursor.fetchall()
     return {
