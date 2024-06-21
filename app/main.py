@@ -95,28 +95,33 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
     if post.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} does not exit to be deleted .")
-    post.delete()
+    post.delete(synchronize_session=False)
     db.commit()
-    
+
     # conn.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
     
 
 # Update a Post Function
 @app.put("/posts/{id}")
-def update_post(id: int, body: Post):
-    cursor.execute("UPDATE posts SET title=%s, content=%s, published=%s WHERE id=%s RETURNING *", (
-        body.title,
-        body.content,
-        body.published,
-        str(id),
-    ))
-    updated_post = cursor.fetchone()
-    if updated_post == None:
+def update_post(id: int, body: Post, db: Session = Depends(get_db)):
+    # cursor.execute("UPDATE posts SET title=%s, content=%s, published=%s WHERE id=%s RETURNING *", (
+    #     body.title,
+    #     body.content,
+    #     body.published,
+    #     str(id),
+    # ))
+    # updated_post = cursor.fetchone()
+
+    post_query = db.query(models.Post).filter(models.Post.id == id)
+
+    if post_query.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} does not exist .")
     
-    conn.commit()
+    post_query.update(body.model_dump(), synchronize_session=False)
+    db.commit()
+    # conn.commit()
     return {
-        "details": updated_post,
+        "details": post_query.first(),
         "status": "success"
     }
