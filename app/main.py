@@ -36,6 +36,8 @@ async def root():
 # Get All Posts Function
 @app.get("/posts")
 def get_posts(db: Session = Depends(get_db)):
+    # cursor.execute("SELECT * FROM posts")
+    # post = cursor.fetchall()
     posts = db.query(models.Post).all()
     return {
         "data": posts,
@@ -55,9 +57,11 @@ def create_post(post: Post):
 
 # Get Latest Post Function
 @app.get("/posts/latest")
-def post():
-    cursor.execute("SELECT * FROM posts ORDER BY created_at DESC LIMIT 1")
-    post = cursor.fetchone()
+def post(db: Session = Depends(get_db)):
+    # cursor.execute("SELECT * FROM posts ORDER BY created_at DESC LIMIT 1")
+    # post = cursor.fetchone()
+    post = db.query(models.Post).order_by(models.Post.id.desc()).first()
+    print(post)
     return {
         "post_details": post,
         "status": "success"
