@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Response, status, HTTPException
-from fastapi.params import Body
 from models import Post
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -19,25 +18,13 @@ while True:
         time.sleep(5)
 
 
-posts = [
-    {
-        "id": 1,
-        "title": "This is first post",
-        "content": "Hello, this is first post and I wish you like it ."
-    },
-    {
-        "id": 2,
-        "title": "Second post title",
-        "content": "In second post, I wanna talk about some thing ..."
-    }
-]
-
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to my api"}
 
 
+# Get All Posts Function
 @app.get("/posts")
 def get_posts():
     cursor.execute("SELECT * FROM posts")
@@ -47,6 +34,7 @@ def get_posts():
         "status": "success"
     }
 
+# Create New Post Function
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
     cursor.execute("INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING *", (post.title, post.content, post.published))
@@ -57,7 +45,7 @@ def create_post(post: Post):
         "status": "success"
     }
 
-
+# Get Latest Post Function
 @app.get("/posts/latest")
 def post():
     cursor.execute("SELECT * FROM posts ORDER BY created_at DESC LIMIT 1")
@@ -67,6 +55,7 @@ def post():
         "status": "success"
     }
 
+# Get One Post Function
 @app.get("/posts/{id}")
 def post(id: int):
     cursor.execute("SELECT * FROM posts WHERE id=%s", (str(id), ))
@@ -80,7 +69,7 @@ def post(id: int):
         "status": "success"
     }
 
-
+# Delete A Post Function
 @app.delete("/posts/{id}")
 def delete_post(id: int):
     cursor.execute("DELETE FROM posts WHERE id=%s RETURNING *", (str(id), ))
@@ -90,14 +79,22 @@ def delete_post(id: int):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
     
 
-
+# Update a Post Function
 @app.put("/posts/{id}")
 def update_post(id: int, body: Post):
-    for i, p in enumerate(posts):
-        if id == p['id']:
-            body = body.model_dump()
-            body['id'] = id
-            posts[i] = body
-            return {"status": "success"}
-        
-    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} does not exist .")
+    print(body)
+    cursor.execute("UPDATE posts SET title=%s, content=%s, published=%s WHERE id=%s RETURNING *", (
+        body.title,
+        body.content,
+        body.published,
+        str(id),
+    ))
+    updated_post = cursor.fetchone()
+    if updated_post == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} does not exist .")
+    
+    conn.commit()
+    return {
+        "details": updated_post,
+        "status": "success"
+    }

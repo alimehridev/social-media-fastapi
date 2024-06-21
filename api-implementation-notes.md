@@ -26,4 +26,5 @@ Here I will write all the notes I learnt in this project .
  9. If you want to delete an entity, at the end in response you should send 204 No Content status code . You should know that a response with 204 No Content should not have any content and if you send any content back with this status code, You will see an error .
  So, When a DELETE HTTP Request is sent to our server to deleting an entity, We should response with status code of 204 No Content without any fucking content .
  10. One the most important thing about APIs is documentation . **FastAPI** will generate documentation about our API automatically and we can access to it with /docs and /redoc . /docs will give us a Swagger UI based documentation and /redoc will give us some UI else . 
- 11. 
+ 11. Do not forget to Parameterize your SQL query to be not in danger of SQL Injection . 
+ 13. If you wanna use Postgres DB in your project, you can use it from docker and in python you should import psycopg2 library .
