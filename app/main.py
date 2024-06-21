@@ -49,19 +49,27 @@ def get_posts():
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
-    # post.model_dump() will convert a BaseModel instance to a dictionary .
-    dumped_post = post.model_dump()
-    dumped_post['id'] = posts[-1]['id'] + 1
-    posts.append(dumped_post)
+    cursor.execute("INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING *", (post.title, post.content, post.published))
+    new_post = cursor.fetchone() #Fetch the result of "RETURNING *" command at the end of query .
+    conn.commit()
     return {
-        "data": dumped_post,
+        "data": new_post,
         "status": "success"
     }
 
 
+@app.get("/posts/latest")
+def post():
+    cursor.execute("SELECT * FROM posts ORDER BY created_at DESC LIMIT 1")
+    post = cursor.fetchone()
+    return {
+        "post_details": post,
+        "status": "success"
+    }
+
 @app.get("/posts/{id}")
 def post(id: int):
-    cursor.execute("SELECT * FROM posts WHERE id=" + str(id))
+    cursor.execute("SELECT * FROM posts WHERE id=%s", (str(id)))
     post = cursor.fetchone()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={
