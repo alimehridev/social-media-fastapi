@@ -36,8 +36,7 @@ async def root():
 # Get All Posts Function
 @app.get("/posts")
 def get_posts(db: Session = Depends(get_db)):
-    cursor.execute("SELECT * FROM posts")
-    posts = cursor.fetchall()
+    posts = db.query(models.Post).all()
     return {
         "data": posts,
         "status": "success"
