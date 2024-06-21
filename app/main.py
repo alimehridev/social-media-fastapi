@@ -89,11 +89,16 @@ def post(id: int, db: Session = Depends(get_db)):
 
 # Delete A Post Function
 @app.delete("/posts/{id}")
-def delete_post(id: int):
-    cursor.execute("DELETE FROM posts WHERE id=%s RETURNING *", (str(id), ))
-    if cursor.fetchone() == None:
+def delete_post(id: int, db: Session = Depends(get_db)):
+    # cursor.execute("DELETE FROM posts WHERE id=%s RETURNING *", (str(id), ))
+    post = db.query(models.Post).filter(models.Post.id == id)
+
+    if post.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id={id} does not exit to be deleted .")
-    conn.commit()
+    post.delete()
+    db.commit()
+    
+    # conn.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
     
 
