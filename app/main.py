@@ -46,10 +46,15 @@ def get_posts(db: Session = Depends(get_db)):
 
 # Create New Post Function
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_post(post: Post):
-    cursor.execute("INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING *", (post.title, post.content, post.published))
-    new_post = cursor.fetchone() #Fetch the result of "RETURNING *" command at the end of query .
-    conn.commit()
+def create_post(post: Post, db: Session = Depends(get_db)):
+    # cursor.execute("INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING *", (post.title, post.content, post.published))
+    # new_post = cursor.fetchone() #Fetch the result of "RETURNING *" command at the end of query .
+    # conn.commit()
+
+    new_post = models.Post(**post.model_dump())
+    db.add(new_post)
+    db.commit()
+    db.refresh(new_post)
     return {
         "data": new_post,
         "status": "success"
@@ -95,7 +100,6 @@ def delete_post(id: int):
 # Update a Post Function
 @app.put("/posts/{id}")
 def update_post(id: int, body: Post):
-    print(body)
     cursor.execute("UPDATE posts SET title=%s, content=%s, published=%s WHERE id=%s RETURNING *", (
         body.title,
         body.content,
