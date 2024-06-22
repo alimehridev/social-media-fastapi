@@ -1,12 +1,10 @@
 # General imports
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 import time
-# Schemas imports
-from models import Post
 # Database imports
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from . import models
+from . import models, schemas
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 
@@ -46,7 +44,7 @@ def get_posts(db: Session = Depends(get_db)):
 
 # Create New Post Function
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-def create_post(post: Post, db: Session = Depends(get_db)):
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     # cursor.execute("INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING *", (post.title, post.content, post.published))
     # new_post = cursor.fetchone() #Fetch the result of "RETURNING *" command at the end of query .
     # conn.commit()
@@ -104,7 +102,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
 # Update a Post Function
 @app.put("/posts/{id}")
-def update_post(id: int, body: Post, db: Session = Depends(get_db)):
+def update_post(id: int, body: schemas.PostCreate, db: Session = Depends(get_db)):
     # cursor.execute("UPDATE posts SET title=%s, content=%s, published=%s WHERE id=%s RETURNING *", (
     #     body.title,
     #     body.content,
