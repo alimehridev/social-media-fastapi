@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
 class PostSchema(BaseModel):
@@ -11,4 +11,18 @@ class PostCreate(PostSchema):
 
 class PostResponse(PostSchema):
     id: int
+    created_at: datetime
+
+
+# User Schemas
+class UserSchema(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserCreate(UserSchema):
+    pass
+
+class UserResponse(BaseModel):
+    id: int
+    email: str
     created_at: datetime

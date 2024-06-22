@@ -2,10 +2,10 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 from typing import List
 # Database imports
-from . import models, schemas
+from . import models, schemas, utils
 from .database import engine, get_db
 from sqlalchemy.orm import Session
-
+from sqlalchemy.exc import IntegrityError
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI() 
@@ -74,3 +74,20 @@ def update_post(id: int, body: schemas.PostCreate, db: Session = Depends(get_db)
         "data": post_query.first(),
         "status": "success"
     }
+
+
+
+# User Functions
+# Create new user
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserResponse)
+def create_user(body: schemas.UserSchema, db: Session = Depends(get_db)):
+    body.password = utils.hash(body.password)
+    user = models.User(**body.model_dump())
+    db.add(user)
+    try:
+        db.commit()
+    except IntegrityError:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"{body.email} email address is not available .")
+    
+    db.refresh(user)
+    return user
