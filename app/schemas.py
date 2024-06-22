@@ -26,3 +26,9 @@ class UserResponse(BaseModel):
     id: int
     email: str
     created_at: datetime
+
+
+# Auth Schemas
+class LoginSchema(BaseModel):
+    email: EmailStr
+    password: str
