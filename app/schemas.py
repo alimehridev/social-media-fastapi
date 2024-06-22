@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 class PostSchema(BaseModel):
     title: str                      # title is a necessary item
@@ -7,3 +8,7 @@ class PostSchema(BaseModel):
 
 class PostCreate(PostSchema):
     pass
+
+class PostResponse(PostSchema):
+    id: int
+    created_at: datetime
