@@ -32,3 +32,4 @@ Here I will write all the notes I learnt in this project .
  15. Technically you do not need Pydantic Models in your API services, but you have to as strict as possible about the data you receive and send to the users and Pydantic Models will ensure that they are what we expect . 
  16. For each of requests our API service receives, We should define a different Pydantic/Model . It is one of the best practices we should know . 
  17. Never send user's password back to the users in your API, There is no reason to do this . 
+ 18. Never put all your paths in one file and you must separate them in different routers .
