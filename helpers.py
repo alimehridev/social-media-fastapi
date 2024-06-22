@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from app.models import Post
+from app.models import Post, User
 
 #SQLALCHEMY_DATABASE_URL = 'postgressql://<username>:<password>@<ip-address/hostname>/<database_name>'
 SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:mysecretpassword@localhost/social-media'
@@ -18,4 +18,26 @@ def insert_random_posts():
         print("Post number", counter, "is added .")
         counter += 1
 
-insert_random_posts()
+def insert_some_users():
+    dummy_users = [
+        {
+            "email": "admin@site.com",
+            "password": "password"
+        },
+        {
+            "email": "user1@site.com",
+            "password": "password"
+        },
+        {
+            "email": "user2@site.com",
+            "password": "password"
+        }
+    ]
+    counter = 0
+
+    for user in dummy_users:
+        user = User(**user)
+        db.add(user)
+        db.commit()
+        print("User number", counter, "is added .")
+        counter += 1
