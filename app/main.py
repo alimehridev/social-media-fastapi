@@ -3,7 +3,9 @@ from fastapi import FastAPI
 # Database imports
 from . import models
 from .database import engine
-from app.routers import post, user, auth
+from app.routers.post import post
+from app.routers.user import user
+from app.routers.auth import auth
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI() 
