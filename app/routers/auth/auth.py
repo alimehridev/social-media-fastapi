@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from app.models import User
 from app.routers.auth.utils import hash, verify_hash
-import oauth2
+import app.routers.auth.oauth2 as oauth2
 
 router = APIRouter(
     prefix="/auth",
