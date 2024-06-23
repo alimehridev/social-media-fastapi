@@ -1,5 +1,6 @@
 from time import time
-from jose import JWTError, jwt
+from jose import jwt
+from jose.exceptions import JWTError, ExpiredSignatureError, JWTClaimsError
 
 # JWT utils
 SECRET_KEY = "445da94dbdd9866f9e7e981546d9a999199f5cfcf272a105719a4b78bd155a73"
@@ -13,3 +14,27 @@ def create_jwt_token(data: dict):
     })
 
     return jwt.encode(payload, key=SECRET_KEY, algorithm=ALGORITHM)
+
+
+def verify_jwt_token(token: str):
+    try:
+        decoded_token = jwt.decode(token, SECRET_KEY, ALGORITHM)
+        return {
+            "detail": decoded_token,
+            "status": "success"
+            }
+    except ExpiredSignatureError:
+        return {
+            "detail": "Token has expired",
+            "status": "failed"
+        }
+    except JWTClaimsError:
+        return {
+            "detail": "Invalid token claims",
+            "status": "failed"
+        }
+    except JWTError:
+        return {
+            "detail": "Invalid Token",
+            "status": "failed"
+            }
