@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from app import schemas
 from app.database import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from app.models import User
-from app.utils import hash
-from app import utils
-
+from app.utils import hash, verify_hash
+import oauth2
 
 router = APIRouter(
     prefix="/auth",
@@ -15,16 +15,17 @@ router = APIRouter(
 
 
 @router.post("/login")
-def login(body: schemas.LoginSchema, db: Session = Depends(get_db)):
+def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    body.email = body.username
     user = db.query(User).filter(User.email == body.email).first()
-    if (not user) or (user.password != hash(body.password)):
+    if (not user) or verify_hash(user.password, body.password) == False:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Email or password is wrong .")
     
-    elif user.password == hash(body.password):
+    elif verify_hash(user.password, body.password):
         payload = {
             "id": user.id
         }
-        token = utils.create_jwt_token(payload)
+        token = oauth2.create_jwt_token(payload)
         return {
             "status": "success",
             "token": token,
