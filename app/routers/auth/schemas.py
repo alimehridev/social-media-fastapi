@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
@@ -16,3 +17,7 @@ class UserResponse(BaseModel):
     id: int
     email: str
     created_at: datetime
+
+class Token(BaseModel):
+    token: str
+    token_type: str

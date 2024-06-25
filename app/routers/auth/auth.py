@@ -10,7 +10,7 @@ import app.routers.auth.oauth2 as oauth2
 
 router = APIRouter(
     prefix="/auth",
-    tags=["Auth"]
+    tags=["Authentication"]
 )
 
 
@@ -19,7 +19,7 @@ def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
     body.email = body.username
     user = db.query(User).filter(User.email == body.email).first()
     if (not user) or verify_hash(user.password, body.password) == False:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Email or password is wrong .")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Email or password is wrong .")
     
     elif verify_hash(user.password, body.password):
         payload = {
@@ -27,7 +27,6 @@ def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
         }
         token = oauth2.create_jwt_token(payload)
         return {
-            "status": "success",
             "token": token,
             "token_type": "bearer"
         }
