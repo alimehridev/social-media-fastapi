@@ -33,3 +33,5 @@ Here I will write all the notes I learnt in this project .
  16. For each of requests our API service receives, We should define a different Pydantic/Model . It is one of the best practices we should know . 
  17. Never send user's password back to the users in your API, There is no reason to do this . 
  18. Never put all your paths in one file and you must separate them in different routers .
+ 19. I think it is better to separate your paths according to their usages in different directories . For example auth functions and routes should be in a file with the name of auth.py and auth functions have their own models, schemas, utils and etc . It is better to separate them from other routes in a directory like apps in Django .
+ 
