@@ -23,12 +23,13 @@ def create_jwt_token(data: dict):
 def verify_jwt_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(token=token, key=SECRET_KEY, algorithms=ALGORITHM)
-        id: str = payload.get("id")
-        if id == None:
-            raise credentials_exception
-        return id
     except JWTError:
         raise credentials_exception
+
+    id: str = payload.get("id")
+    if id == None:
+        raise credentials_exception
+    return id
 
 def is_auth(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credentials is not valid .", headers={
