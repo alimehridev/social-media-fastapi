@@ -7,6 +7,7 @@ from app.routers.post import schemas
 from app.database import get_db
 from sqlalchemy.orm import Session
 from app.routers.auth import oauth2
+from app.routers.user.models import User
 
 router = APIRouter(
     prefix="/posts",
@@ -15,13 +16,13 @@ router = APIRouter(
 
 # Get All Posts Function
 @router.get("/", response_model=List[schemas.PostResponse])
-def get_posts(db: Session = Depends(get_db), user_id: int = Depends(oauth2.is_auth)):
+def get_posts(db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     posts = db.query(models.Post).all()
     return posts
 
 # Create New Post Function
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
-def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), user_id: int = Depends(oauth2.is_auth)):
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     new_post = models.Post(**post.model_dump())
     db.add(new_post)
     db.commit()
@@ -30,13 +31,13 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), user_id
 
 # Get Latest Post Function
 @router.get("/latest", response_model=schemas.PostResponse)
-def post(db: Session = Depends(get_db), user_id: int = Depends(oauth2.is_auth)):
+def post(db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).order_by(models.Post.id.desc()).first()
     return post
 
 # Get One Post Function
 @router.get("/{id}", response_model=schemas.PostResponse)
-def post(id: int, db: Session = Depends(get_db), user_id: int = Depends(oauth2.is_auth)):
+def post(id: int, db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={
@@ -46,7 +47,7 @@ def post(id: int, db: Session = Depends(get_db), user_id: int = Depends(oauth2.i
 
 # Delete A Post Function
 @router.delete("/{id}")
-def delete_post(id: int, db: Session = Depends(get_db), user_id: int = Depends(oauth2.is_auth)):
+def delete_post(id: int, db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).filter(models.Post.id == id)
 
     if post.first() == None:
@@ -59,7 +60,7 @@ def delete_post(id: int, db: Session = Depends(get_db), user_id: int = Depends(o
 
 # Update a Post Function
 @router.put("/{id}")
-def update_post(id: int, body: schemas.PostCreate, db: Session = Depends(get_db), user_id: int = Depends(oauth2.is_auth)):
+def update_post(id: int, body: schemas.PostCreate, db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
 
     if post_query.first() == None:
