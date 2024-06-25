@@ -11,4 +11,5 @@ class PostCreate(PostSchema):
 
 class PostResponse(PostSchema):
     id: int
+    owner_id: int
     created_at: datetime
