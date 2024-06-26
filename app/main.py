@@ -6,7 +6,9 @@ from .database import engine
 from app.routers.post import post
 from app.routers.user import user
 from app.routers.auth import auth
+from app.config import Settings
 
+settings = Settings()
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI() 
 

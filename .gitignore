@@ -2,3 +2,4 @@
 .prettierrc
 docker-help
 todo.md
+.env
