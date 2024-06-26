@@ -15,13 +15,13 @@ router = APIRouter(
 )
 
 # Get All Posts Function
-@router.get("/", response_model=List[schemas.PostResponse])
+@router.get("/", response_model=List[schemas.PostToResponse])
 def get_posts(db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     posts = db.query(models.Post).all()
     return posts
 
 # Create New Post Function
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostToResponse)
 def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post = post.model_dump()
     post.update({
@@ -34,13 +34,13 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current
     return new_post
 
 # Get Latest Post Function
-@router.get("/latest", response_model=schemas.PostResponse)
+@router.get("/latest", response_model=schemas.PostToResponse)
 def post(db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).order_by(models.Post.id.desc()).first()
     return post
 
 # Get One Post Function
-@router.get("/{id}", response_model=schemas.PostResponse)
+@router.get("/{id}", response_model=schemas.PostToResponse)
 def post(id: int, db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:

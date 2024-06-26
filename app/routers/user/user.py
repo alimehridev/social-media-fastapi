@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 # Getting a user by it's id
-@router.get("/{id}", response_model=schemas.UserResponse)
+@router.get("/{id}", response_model=schemas.UserToResponse)
 def get_user(id: int, db: Session = Depends(get_db), current_user: User = Depends(oauth2.get_current_user)):
     user = db.query(User).filter(User.id == id).first()
     if user == None:

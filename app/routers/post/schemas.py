@@ -1,5 +1,6 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from datetime import datetime
+from app.routers.user.schemas import UserToResponse
 
 class PostSchema(BaseModel):
     title: str                      # title is a necessary item
@@ -9,7 +10,7 @@ class PostSchema(BaseModel):
 class PostCreate(PostSchema):
     pass
 
-class PostResponse(PostSchema):
+class PostToResponse(PostSchema):
     id: int
-    owner_id: int
     created_at: datetime
+    owner: UserToResponse

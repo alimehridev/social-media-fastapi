@@ -9,7 +9,7 @@ class UserSchema(BaseModel):
 class UserCreate(UserSchema):
     pass
 
-class UserResponse(BaseModel):
+class UserToResponse(BaseModel):
     id: int
     email: str
     created_at: datetime
