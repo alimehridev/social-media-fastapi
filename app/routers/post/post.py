@@ -8,6 +8,7 @@ from app.database import get_db
 from sqlalchemy.orm import Session
 from app.routers.auth import oauth2
 from app.routers.user.models import User
+from sqlalchemy import or_
 
 router = APIRouter(
     prefix="/posts",
@@ -20,6 +21,14 @@ def get_posts(db: Session = Depends(get_db), current_user : User = Depends(oauth
     if page_number == 0:
         page_number = 1
     posts = db.query(models.Post).limit(posts_count).offset((page_number - 1) * posts_count).all()
+    return posts
+
+# Search in posts title and content
+@router.get("/search", response_model=List[schemas.PostToResponse])
+def search(db: Session = Depends(get_db), current_user: User = Depends(oauth2.get_current_user), q: str = "", page_number: int = 1, posts_count: int = 10):
+    if page_number == 0:
+        page_number = 1
+    posts = db.query(models.Post).filter(or_(models.Post.content.ilike(f"%{q}%"), models.Post.title.ilike(f"%{q}%"))).limit(posts_count).offset((page_number - 1) * posts_count).all()
     return posts
 
 # Create New Post Function

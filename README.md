@@ -4,13 +4,17 @@ Endpoints:
  1. Posts
 	 1. GET /posts Get Posts
 	 	GET /posts?page_number=X
-		GET /posts?posts_count=X
+		GET /posts?posts_count=Y
 		GET /posts?page_number=X&posts_count=Y
 	 2. POST /posts Create Posts
 	 3. GET /posts/{id} Get POST
 	 4. PUT /posts/{id} Update Post
 	 5. DELETE /posts/{id} Delete Post
 	 6. GET /posts/latest Getting latest posts
+	 7. GET /posts/search?q=X To search X in titles and contents of the posts
+	 	GET /posts/search?q=X?page_number=Y
+		GET /posts/search?q=X?posts_number=Z
+		GET /posts/search?q=X?page_number=Y&posts_number=Z
  2. Vote
 	 1. POST /vote/ Vote to specific post
  3. Users
