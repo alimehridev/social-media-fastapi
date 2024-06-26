@@ -3,6 +3,9 @@
 Endpoints:
  1. Posts
 	 1. GET /posts Get Posts
+	 	GET /posts?page_number=X
+		GET /posts?posts_count=X
+		GET /posts?page_number=X&posts_count=Y
 	 2. POST /posts Create Posts
 	 3. GET /posts/{id} Get POST
 	 4. PUT /posts/{id} Update Post

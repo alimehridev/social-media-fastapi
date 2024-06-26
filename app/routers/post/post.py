@@ -16,8 +16,10 @@ router = APIRouter(
 
 # Get All Posts Function
 @router.get("/", response_model=List[schemas.PostToResponse])
-def get_posts(db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
-    posts = db.query(models.Post).all()
+def get_posts(db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user), page_number: int = 1, posts_count: int = 10):
+    if page_number == 0:
+        page_number = 1
+    posts = db.query(models.Post).limit(posts_count).offset((page_number - 1) * posts_count).all()
     return posts
 
 # Create New Post Function
