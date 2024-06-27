@@ -22,7 +22,8 @@ Endpoints:
 
 		GET /posts/search?q=X?page_number=Y&posts_number=Z
  2. Vote
-	 1. POST /vote/ Vote to specific post
+	 1. POST /vote/up Vote to specific post
+	 2. POST /vote/back Take back your vote from a post
  3. Users
 	 1. GET /users/{id} Get User
  4. Authentication
