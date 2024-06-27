@@ -21,6 +21,8 @@ def get_posts(db: Session = Depends(get_db), current_user : User = Depends(oauth
     if page_number == 0:
         page_number = 1
     posts = db.query(models.Post).limit(posts_count).offset((page_number - 1) * posts_count).all()
+    for post in posts:
+        post.votes_count = len(post.votes)
     return posts
 
 # Search in posts title and content

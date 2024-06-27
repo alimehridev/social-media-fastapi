@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import List
 from app.routers.user.schemas import UserToResponse
+from app.routers.vote.schemas import VoteToResponse
 
 class PostSchema(BaseModel):
     title: str                      # title is a necessary item
@@ -14,3 +16,5 @@ class PostToResponse(PostSchema):
     id: int
     created_at: datetime
     owner: UserToResponse
+    votes: List[VoteToResponse]
+    votes_count: int

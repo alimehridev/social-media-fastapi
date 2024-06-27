@@ -15,3 +15,4 @@ class Post(Base):
     created_at = Column("created_at", TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
     
     owner = relationship("app.models.User")
+    votes = relationship("app.models.Vote")
