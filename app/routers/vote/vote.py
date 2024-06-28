@@ -19,9 +19,6 @@ def vote(vote: schemas.Vote, db: Session = Depends(get_db), current_user: User =
     post_id = vote.post_id
 
     # Check for vote to be not existed 
-    last_vote = db.query(Vote).filter(and_(Vote.post_id == post_id, Vote.user_id == user_id)).first()
-    if last_vote != None:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="vote has been done before .")
     vote = Vote()
     vote.post_id = post_id
     vote.user_id = user_id
@@ -29,9 +26,10 @@ def vote(vote: schemas.Vote, db: Session = Depends(get_db), current_user: User =
     try:
         db.commit()
     except IntegrityError:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id={post_id} not found .")
-    db.refresh(vote)
-    return vote
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This user has been voted before for this post .")
+    return {
+        "detail": "done ."
+    }
 
 @router.post("/back")
 def vote_back(vote: schemas.Vote, db: Session = Depends(get_db), current_user: User = Depends(oauth2.get_current_user)):

@@ -34,4 +34,5 @@ Here I will write all the notes I learnt in this project .
  17. Never send user's password back to the users in your API, There is no reason to do this . 
  18. Never put all your paths in one file and you must separate them in different routers .
  19. I think it is better to separate your paths according to their usages in different directories . For example auth functions and routes should be in a file with the name of auth.py and auth functions have their own models, schemas, utils and etc . It is better to separate them from other routes in a directory like apps in Django .
+ 20. If you want to have a table with a combination of more than one column be unique, You have to use **Composite Keys** in your DBMS . In our project, Voting table should have a unique combination between post_id and user_id because a user cannot vote for a post twice . There are some other ways that you can implement something like this but best practices told us to use **Composite Keys** . **Composite Keys** are **Primary Key** that is spanned multiple columns .
  
