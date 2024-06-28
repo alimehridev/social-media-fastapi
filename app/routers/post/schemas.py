@@ -17,4 +17,4 @@ class PostToResponse(PostSchema):
     created_at: datetime
     owner: UserToResponse
     votes: List[VoteToResponse]
-    votes_count: int
+    votes_count: int = 0

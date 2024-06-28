@@ -8,6 +8,7 @@ from app.database import get_db
 from sqlalchemy.orm import Session
 from app.routers.auth import oauth2
 from app.routers.user.models import User
+from app.models import Vote
 from sqlalchemy import or_
 
 router = APIRouter(
@@ -22,7 +23,7 @@ def get_posts(db: Session = Depends(get_db), current_user : User = Depends(oauth
         page_number = 1
     posts = db.query(models.Post).limit(posts_count).offset((page_number - 1) * posts_count).all()
     for post in posts:
-        post.votes_count = len(post.votes)
+        post.votes_count = db.query(Vote).filter(Vote.post_id == post.id).count()
     return posts
 
 # Search in posts title and content
@@ -31,6 +32,8 @@ def search(db: Session = Depends(get_db), current_user: User = Depends(oauth2.ge
     if page_number == 0:
         page_number = 1
     posts = db.query(models.Post).filter(or_(models.Post.content.ilike(f"%{q}%"), models.Post.title.ilike(f"%{q}%"))).limit(posts_count).offset((page_number - 1) * posts_count).all()
+    for post in posts:
+        post.votes_count = db.query(Vote).filter(Vote.post_id == post.id).count()
     return posts
 
 # Create New Post Function
@@ -50,6 +53,7 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current
 @router.get("/latest", response_model=schemas.PostToResponse)
 def post(db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).order_by(models.Post.id.desc()).first()
+    post.votes_count = db.query(Vote).filter(Vote.post_id == post.id).count()
     return post
 
 # Get One Post Function
@@ -60,6 +64,7 @@ def post(id: int, db: Session = Depends(get_db), current_user : User = Depends(o
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={
             "status": f"Post with id={id} not found ."
         })
+    post.votes_count = db.query(Vote).filter(Vote.post_id == post.id).count()
     return post
 
 # Delete A Post Function

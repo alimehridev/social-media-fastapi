@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -13,12 +13,11 @@ router = APIRouter(
     tags=["Vote"]
 )
 
-@router.post("/up")
+@router.post("/up", status_code=status.HTTP_201_CREATED)
 def vote(vote: schemas.Vote, db: Session = Depends(get_db), current_user: User = Depends(oauth2.get_current_user)):
     user_id = current_user.id
     post_id = vote.post_id
 
-    # Check for vote to be not existed 
     vote = Vote()
     vote.post_id = post_id
     vote.user_id = user_id
@@ -31,7 +30,7 @@ def vote(vote: schemas.Vote, db: Session = Depends(get_db), current_user: User =
         "detail": "done ."
     }
 
-@router.post("/back")
+@router.delete("/back")
 def vote_back(vote: schemas.Vote, db: Session = Depends(get_db), current_user: User = Depends(oauth2.get_current_user)):
     user_id = current_user.id
     post_id = vote.post_id
@@ -42,6 +41,4 @@ def vote_back(vote: schemas.Vote, db: Session = Depends(get_db), current_user: U
     db.delete(vote)
     db.commit()
     
-    return {
-        "detail": "Vote deleted ."
-    }
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
