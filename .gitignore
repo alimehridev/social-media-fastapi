@@ -1,5 +1,7 @@
 .venv
+.jetclient
 .prettierrc
 docker-help
 todo.md
 .env
+.idea

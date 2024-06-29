@@ -17,7 +17,7 @@ router = APIRouter(
 )
 
 # Get All Posts Function
-@router.get("/", response_model=List[schemas.PostToResponse])
+@router.get("", response_model=List[schemas.PostToResponse])
 def get_posts(db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user), page_number: int = 1, posts_count: int = 10):
     if page_number == 0:
         page_number = 1
@@ -37,7 +37,7 @@ def search(db: Session = Depends(get_db), current_user: User = Depends(oauth2.ge
     return posts
 
 # Create New Post Function
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostToResponse)
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=schemas.PostToResponse)
 def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current_user : User = Depends(oauth2.get_current_user)):
     post = post.model_dump()
     post.update({
