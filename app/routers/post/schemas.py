@@ -17,4 +17,7 @@ class PostToResponse(PostSchema):
     created_at: datetime
     owner: UserToResponse
     votes: List[VoteToResponse]
+
+class PostToResponseWithVotes(BaseModel):
+    Post: PostToResponse
     votes_count: int = 0
